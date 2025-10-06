@@ -26,11 +26,13 @@ impl ScanResult {
     }
 
     /// Retorna uma categoria específica por nome.
+    #[allow(dead_code)]
     pub fn get_category(&self, name: &str) -> Option<&CleanableCategory> {
         self.categories.iter().find(|c| c.name() == name)
     }
 
     /// Retorna uma categoria mutável por nome.
+    #[allow(dead_code)]
     pub fn get_category_mut(&mut self, name: &str) -> Option<&mut CleanableCategory> {
         self.categories.iter_mut().find(|c| c.name() == name)
     }
@@ -46,6 +48,7 @@ impl ScanResult {
     }
 
     /// Verifica se há algum item encontrado.
+    #[allow(dead_code)]
     pub fn has_items(&self) -> bool {
         self.categories.iter().any(|cat| !cat.is_empty())
     }

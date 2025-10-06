@@ -69,14 +69,14 @@ impl UltraModernTheme {
         let accent_hover = Color32::from_rgb(167, 139, 250);    // Light purple
 
         // Status colors
-        let success = Color32::from_rgb(34, 197, 94);
-        let warning = Color32::from_rgb(251, 146, 60);
-        let danger = Color32::from_rgb(239, 68, 68);
+        let _success = Color32::from_rgb(34, 197, 94);
+        let _warning = Color32::from_rgb(251, 146, 60);
+        let _danger = Color32::from_rgb(239, 68, 68);
 
         // Text colors
         let text_primary = Color32::from_rgb(243, 244, 246);
-        let text_secondary = Color32::from_rgb(156, 163, 175);
-        let text_muted = Color32::from_rgb(107, 114, 128);
+        let _text_secondary = Color32::from_rgb(156, 163, 175);
+        let _text_muted = Color32::from_rgb(107, 114, 128);
 
         // ========================================
         // SPACING & LAYOUT

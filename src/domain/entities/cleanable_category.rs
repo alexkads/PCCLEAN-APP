@@ -50,6 +50,7 @@ impl CleanableCategory {
     }
 
     /// Retorna os primeiros N itens da categoria.
+    #[allow(dead_code)]
     pub fn take(&self, count: usize) -> &[CleanableItem] {
         let end = count.min(self.items.len());
         &self.items[..end]

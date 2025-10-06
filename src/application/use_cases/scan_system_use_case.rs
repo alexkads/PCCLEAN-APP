@@ -25,7 +25,8 @@ impl ScanSystemUseCase {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::domain::entities::CleanableCategory;
+    use crate::domain::entities::{CleanableCategory, CleanableItem};
+    use crate::domain::value_objects::CategoryType;
 
     struct MockScannerRepository;
 
@@ -36,7 +37,7 @@ mod tests {
             Ok(result)
         }
 
-        fn scan_category(&self, _category_type: crate::domain::CategoryType) -> Result<Vec<crate::domain::CleanableItem>> {
+        fn scan_category(&self, _category_type: CategoryType) -> Result<Vec<CleanableItem>> {
             Ok(Vec::new())
         }
     }

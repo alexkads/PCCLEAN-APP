@@ -22,6 +22,7 @@ impl CategoryType {
     }
 
     /// Retorna o identificador interno da categoria.
+    #[allow(dead_code)]
     pub fn identifier(&self) -> &'static str {
         match self {
             CategoryType::LogFiles => "log_files",

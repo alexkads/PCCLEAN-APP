@@ -38,7 +38,7 @@ impl FileSystemCleanerRepository {
 
         if output.status.success() {
             // Parse do output para contar itens removidos
-            let stdout = String::from_utf8_lossy(&output.stdout);
+            let _stdout = String::from_utf8_lossy(&output.stdout);
             // Docker retorna algo como "Total reclaimed space: X"
             Ok(1) // Simplificado - em produção parsearia o output
         } else {
