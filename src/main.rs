@@ -6,7 +6,7 @@ mod presentation;
 mod shared;
 
 use eframe::egui;
-use presentation::{PCCleanApp, create_icon, setup_custom_fonts};
+use presentation::PCCleanApp;
 
 /// Ponto de entrada da aplicação.
 /// Configura e inicializa a interface gráfica.
@@ -14,10 +14,9 @@ fn main() -> eframe::Result<()> {
     let options = create_native_options();
 
     eframe::run_native(
-        "PCCLEAN - Cyberpunk Disk Cleaner DDD",
+        "PCCLEAN - Ultra Modern Disk Cleaner",
         options,
         Box::new(|cc| {
-            setup_custom_fonts(&cc.egui_ctx);
             Ok(Box::new(PCCleanApp::new(cc)))
         }),
     )
@@ -26,9 +25,8 @@ fn main() -> eframe::Result<()> {
 fn create_native_options() -> eframe::NativeOptions {
     eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_inner_size([1200.0, 800.0])
-            .with_min_inner_size([800.0, 600.0])
-            .with_icon(create_icon()),
+            .with_inner_size([1280.0, 900.0])
+            .with_min_inner_size([900.0, 650.0]),
         renderer: eframe::Renderer::Wgpu,
         ..Default::default()
     }
