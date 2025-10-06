@@ -1,0 +1,97 @@
+┌─────────────────────────────────────────────────────────────────┐
+│                        PRESENTATION LAYER                        │
+│  ┌────────────┐  ┌──────────────┐  ┌──────────────────────┐    │
+│  │  App.rs    │  │  Widgets     │  │  Theme & Styling     │    │
+│  │  (UI)      │  │  Components  │  │  (Cyberpunk)         │    │
+│  └─────┬──────┘  └──────────────┘  └──────────────────────┘    │
+│        │                                                          │
+└────────┼──────────────────────────────────────────────────────────┘
+         │ Depends on Use Cases (Application Layer)
+         ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       APPLICATION LAYER                          │
+│  ┌─────────────────────┐    ┌─────────────────────────────┐    │
+│  │ ScanSystemUseCase   │    │ CleanSelectedCategoriesUC   │    │
+│  │                     │    │                             │    │
+│  │ - Orchestrates scan │    │ - Orchestrates cleanup      │    │
+│  │ - No business logic │    │ - Coordinates repositories  │    │
+│  └──────────┬──────────┘    └─────────────┬───────────────┘    │
+│             │                              │                     │
+│             │ Depends on Repository Traits │                     │
+└─────────────┼──────────────────────────────┼─────────────────────┘
+              │                              │
+              ▼                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         DOMAIN LAYER                             │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                      ENTITIES                             │  │
+│  │  • CleanableItem (path, size)                           │  │
+│  │  • CleanableCategory (items, total_size)               │  │
+│  │  • ScanResult (categories)                              │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                   VALUE OBJECTS                           │  │
+│  │  • CategoryType (enum with display logic)                │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                 REPOSITORY INTERFACES                     │  │
+│  │  • trait ScannerRepository                               │  │
+│  │  • trait CleanerRepository                               │  │
+│  └───────────────────────┬──────────────────────────────────┘  │
+│                          │ Implemented by Infrastructure        │
+└──────────────────────────┼──────────────────────────────────────┘
+                           │
+                           ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                     INFRASTRUCTURE LAYER                         │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │          FileSystemScannerRepository                      │  │
+│  │  - Scans filesystem for logs, temp files                 │  │
+│  │  - Scans Docker (images, volumes)                        │  │
+│  │  - Scans dev packages (node_modules, cargo)             │  │
+│  └──────────────────────────────────────────────────────────┘  │
+│                                                                  │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │          FileSystemCleanerRepository                      │  │
+│  │  - Removes files and directories                         │  │
+│  │  - Executes Docker cleanup commands                      │  │
+│  │  - Strategy-based cleanup logic                          │  │
+│  └──────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                         SHARED LAYER                             │
+│  • Formatters (format_bytes)                                    │
+│  • Common utilities used across layers                          │
+└─────────────────────────────────────────────────────────────────┘
+
+DEPENDENCY FLOW (following Dependency Inversion):
+═══════════════════════════════════════════════════
+
+Presentation ──depends on──> Application (Use Cases)
+                                  │
+Application ──depends on──> Domain (Traits/Interfaces)
+                                  │
+                                  │ implemented by
+                                  ▼
+Infrastructure ──implements──> Domain Interfaces
+
+PRINCIPLES APPLIED:
+═══════════════════
+
+✅ Single Responsibility: Each class/module has one job
+✅ Open/Closed: Open for extension via new implementations
+✅ Liskov Substitution: All repository implementations are interchangeable
+✅ Interface Segregation: Small, focused interfaces
+✅ Dependency Inversion: High-level modules don't depend on low-level modules
+
+DDD CONCEPTS:
+════════════
+
+• Entities: Objects with identity (CleanableItem, CleanableCategory)
+• Value Objects: Immutable objects (CategoryType)
+• Aggregates: Root entities (ScanResult)
+• Repositories: Abstract data access
+• Use Cases: Application orchestration

@@ -49,7 +49,211 @@ Uma aplicação moderna de limpeza de disco com interface cyberpunk futurística
 ```bash
 # Clone o repositório
 git clone <url>
-cd PCCLEAN-APP
+cd # ⚡ PCCLEAN-APP - Cyberpunk Disk Cleaner
+
+![Version](https://img.shields.io/badge/version-2.0-blue)
+![Architecture](https://img.shields.io/badge/architecture-DDD-green)
+![Clean Code](https://img.shields.io/badge/clean%20code-SOLID-orange)
+![Tests](https://img.shields.io/badge/tests-14%20passing-brightgreen)
+![Rust](https://img.shields.io/badge/rust-1.70%2B-orange)
+
+Uma aplicação moderna de limpeza de disco construída com **Domain-Driven Design**, **Clean Architecture** e **SOLID principles**.
+
+## 🎯 Características
+
+- 🏗️ **Arquitetura em Camadas**: DDD + Clean Architecture
+- 🧪 **100% Testável**: 14 testes unitários
+- 🎨 **Interface Cyberpunk**: Visual futurista com tema neon
+- 🚀 **Alta Performance**: Compilado em Rust
+- 📚 **Bem Documentado**: 5 documentos detalhados
+
+## 🚀 Quick Start
+
+### Executar Aplicação
+```bash
+cargo run --release
+```
+
+### Executar Testes
+```bash
+cargo test
+```
+
+### Verificar Código
+```bash
+cargo clippy
+cargo fmt
+```
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── domain/              # Regras de negócio puras
+│   ├── entities/        # CleanableItem, CleanableCategory, ScanResult
+│   ├── value_objects/   # CategoryType
+│   └── repositories/    # Interfaces (traits)
+│
+├── application/         # Casos de uso
+│   └── use_cases/       # ScanSystemUseCase, CleanSelectedCategoriesUseCase
+│
+├── infrastructure/      # Implementações concretas
+│   └── repositories/    # FileSystemScanner, FileSystemCleaner
+│
+├── presentation/        # Interface do usuário
+│   ├── app.rs          # Aplicação principal
+│   ├── theme.rs        # Tema cyberpunk
+│   └── widgets/        # Componentes reutilizáveis
+│
+└── shared/             # Utilitários
+    └── formatters.rs   # format_bytes, etc.
+```
+
+## 🎨 Funcionalidades
+
+### Categorias de Limpeza
+- 📄 **Arquivos de Log** - Logs do sistema e aplicações
+- 🗂️ **Arquivos Temporários** - Cache e arquivos temp
+- 🐳 **Imagens Docker** - Imagens não utilizadas
+- 💾 **Volumes Docker** - Volumes órfãos
+- 📦 **Pacotes de Desenvolvimento** - node_modules, cargo cache
+
+### Interface
+- ✅ Seleção múltipla de categorias
+- 🎯 Visualização por tamanho
+- ⚠️ Confirmação antes de limpar
+- 🎨 Tema cyberpunk neon
+- 📊 Estatísticas em tempo real
+
+## 📚 Documentação
+
+| Documento | Descrição |
+|-----------|-----------|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Guia completo da arquitetura |
+| [ARCHITECTURE_DIAGRAM.txt](ARCHITECTURE_DIAGRAM.txt) | Diagrama visual das camadas |
+| [REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md) | Comparação antes/depois |
+| [EXTENSIBILITY_GUIDE.md](EXTENSIBILITY_GUIDE.md) | Como adicionar novas features |
+| [EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md) | Resumo executivo |
+
+## 🏗️ Princípios Aplicados
+
+### Domain-Driven Design (DDD)
+✅ Entidades com comportamento  
+✅ Value Objects imutáveis  
+✅ Agregados bem definidos  
+✅ Repositories como abstrações  
+
+### SOLID Principles
+✅ Single Responsibility  
+✅ Open/Closed  
+✅ Liskov Substitution  
+✅ Interface Segregation  
+✅ Dependency Inversion  
+
+### Clean Code
+✅ Nomes significativos  
+✅ Funções pequenas e focadas  
+✅ Tratamento explícito de erros  
+✅ Código testável  
+✅ DRY (Don't Repeat Yourself)  
+
+## 🧪 Testes
+
+```bash
+$ cargo test
+running 14 tests
+test result: ok. 14 passed; 0 failed
+```
+
+### Cobertura
+- ✅ Domain Layer: 9 testes
+- ✅ Application Layer: 2 testes
+- ✅ Infrastructure Layer: 2 testes
+- ✅ Shared Layer: 1 teste
+
+## 📦 Dependências
+
+```toml
+eframe = { version = "0.28", features = ["wgpu"] }
+egui = "0.28"
+walkdir = "2.5"
+anyhow = "1.0"
+```
+
+## 🔧 Requisitos
+
+- Rust 1.70+
+- macOS, Linux ou Windows
+- Docker (opcional, para limpeza de containers)
+
+## 💡 Exemplos de Uso
+
+### Adicionar Nova Categoria
+```rust
+// 1. Adicionar ao enum
+pub enum CategoryType {
+    BrowserCache,  // Nova categoria
+}
+
+// 2. Implementar scanner
+fn scan_browser_cache(&self) -> Result<Vec<CleanableItem>> {
+    // Sua implementação
+}
+
+// 3. Pronto! A UI se adapta automaticamente
+```
+
+### Criar Novo Use Case
+```rust
+pub struct ExportResultsUseCase {
+    // Suas dependências
+}
+
+impl ExportResultsUseCase {
+    pub fn execute(&self, results: &ScanResult) -> Result<()> {
+        // Sua lógica
+    }
+}
+```
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Por favor:
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+**Importante**: Siga os princípios DDD e Clean Code!
+
+## 📈 Roadmap
+
+- [ ] Adicionar testes de integração
+- [ ] Implementar logging estruturado
+- [ ] Suporte a múltiplos idiomas
+- [ ] Histórico de limpezas
+- [ ] API REST
+- [ ] Suporte a cloud storage
+
+## 📄 Licença
+
+MIT License - veja [LICENSE](LICENSE) para detalhes
+
+## 👏 Agradecimentos
+
+- Eric Evans - Domain-Driven Design
+- Robert C. Martin - Clean Architecture & Clean Code
+- Rust Community - Excelente linguagem e ferramentas
+
+---
+
+**Desenvolvido com 💜 seguindo as melhores práticas de engenharia de software**
+
+## 🌟 Se você gostou, dê uma estrela!
+
+[![GitHub stars](https://img.shields.io/github/stars/alexkads/PCCLEAN-APP?style=social)](https://github.com/alexkads/PCCLEAN-APP)
 
 # Compilar em modo release
 cargo build --release
