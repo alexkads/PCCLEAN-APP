@@ -69,20 +69,31 @@ Uma aplicação moderna de limpeza de disco construída com **Domain-Driven Desi
 
 ## 🚀 Quick Start
 
-### Executar Aplicação
+### ⚡ Desenvolvimento (Rápido - Use Este!)
 ```bash
-cargo run --release
+cargo run              # Build rápido (~2s) + executa
+cargo check            # Verifica erros (~1s)
+cargo test             # Roda testes (~2s)
 ```
 
-### Executar Testes
+### 🎮 Testar Performance
 ```bash
-cargo test
+cargo run --profile fast-release    # Build otimizado (~35s)
 ```
+
+### 📦 Build para Distribuição
+```bash
+cargo build --release  # Máxima otimização (~33s)
+./target/release/pcclean-app
+```
+
+> 💡 **Dica**: Durante desenvolvimento, use `cargo run` (2s). O `--release` (~33s) é só para distribuição final!
+> 📖 Veja [BUILD_GUIDE.md](BUILD_GUIDE.md) e [QUICK_REFERENCE.md](QUICK_REFERENCE.md) para mais detalhes.
 
 ### Verificar Código
 ```bash
-cargo clippy
-cargo fmt
+cargo clippy           # Linter
+cargo fmt              # Formatação
 ```
 
 ## 📁 Estrutura do Projeto
