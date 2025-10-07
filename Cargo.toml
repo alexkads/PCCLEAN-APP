@@ -18,7 +18,35 @@ chrono = "0.4"
 anyhow = "1.0"
 byte-unit = "5.1"
 
+# Perfil para desenvolvimento com otimizações básicas
+# Use: cargo build --profile dev-opt
+[profile.dev]
+opt-level = 0        # Sem otimizações - build rápido
+debug = true         # Símbolos de debug completos
+
+# Perfil otimizado para desenvolvimento/testes
+# Use: cargo build --profile dev-opt
+[profile.dev-opt]
+inherits = "dev"
+opt-level = 1        # Otimizações básicas
+debug = true         # Mantém debug info
+codegen-units = 16   # Paralelização máxima
+
+# Perfil para releases rápidos durante desenvolvimento
+# Use: cargo build --profile fast-release
+[profile.fast-release]
+inherits = "release"
+opt-level = 2        # Bom equilíbrio velocidade/performance
+lto = "thin"         # LTO rápido
+codegen-units = 8    # Alguma paralelização
+debug = false        # Sem debug info
+
+# Perfil para release final (máxima otimização)
+# Use: cargo build --release
 [profile.release]
-opt-level = 3
-lto = true
-codegen-units = 1
+opt-level = 3        # Máxima otimização
+lto = true           # LTO completo (lento mas melhor binário)
+codegen-units = 1    # Máxima otimização
+strip = true         # Remove símbolos (binário menor)
+debug = false        # Sem debug info
+panic = "abort"      # Menor binário
