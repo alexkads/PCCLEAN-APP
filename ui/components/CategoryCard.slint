@@ -1,0 +1,83 @@
+import { CheckBox, HorizontalBox, VerticalBox } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { CategoryData } from "../types.slint";
+
+// Card de categoria
+export component CategoryCard inherits Rectangle {
+    in property <CategoryData> data;
+    in-out property <bool> selected: data.selected;
+    callback selection-changed(bool);
+    
+    height: 90px;
+    background: selected ? rgba(139, 92, 246, 0.15) : rgba(20, 20, 40, 0.6);
+    border-radius: 16px;
+    border-width: 1.5px;
+    border-color: selected ? Theme.primary : rgba(255, 255, 255, 0.05);
+    
+    // Hover effect
+    states [
+        hover when touch.has-hover: {
+            background: selected ? rgba(139, 92, 246, 0.2) : rgba(30, 30, 50, 0.8);
+        }
+    ]
+    
+    touch := TouchArea { }
+    
+    HorizontalLayout {
+        padding: 20px;
+        spacing: 16px;
+        alignment: center;
+        
+        CheckBox {
+            checked <=> selected;
+            toggled => {
+                selection-changed(self.checked);
+            }
+        }
+        
+        Text {
+            text: data.icon;
+            font-size: 28px;
+            width: 40px;
+        }
+        
+        VerticalLayout {
+            spacing: 4px;
+            alignment: start;
+            
+            Text {
+                text: data.name;
+                font-size: 16px;
+                font-weight: 600;
+                color: Theme.text-primary;
+            }
+            
+            Text {
+                text: data.items-count + " items • " + data.total-size;
+                font-size: 13px;
+                color: Theme.text-secondary;
+            }
+        }
+        
+        Rectangle {
+            width: 100%;
+        }
+        
+        // Size badge
+        Rectangle {
+            width: 90px;
+            height: 32px;
+            background: Theme.primary;
+            border-radius: 8px;
+            
+            Text {
+                text: data.total-size;
+                font-size: 14px;
+                font-weight: 600;
+                color: white;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+}

@@ -1,0 +1,37 @@
+import { VerticalBox } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { GlassCard } from "./GlassCard.slint";
+
+// Header Component
+export component Header inherits GlassCard {
+    height: 180px;
+    glow: true;
+    
+    VerticalLayout {
+        padding: 40px;
+        spacing: 8px;
+        alignment: center;
+        
+        Text {
+            text: "✨ PCCLEAN";
+            font-size: 48px;
+            font-weight: 900;
+            color: Theme.primary;
+            horizontal-alignment: center;
+        }
+        
+        Text {
+            text: "Ultra Modern Disk Cleaner";
+            font-size: 16px;
+            color: Theme.text-secondary;
+            horizontal-alignment: center;
+        }
+        
+        Text {
+            text: "DDD Architecture • Clean Code • SOLID";
+            font-size: 11px;
+            color: Theme.text-muted;
+            horizontal-alignment: center;
+        }
+    }
+}

@@ -1,0 +1,46 @@
+import { HorizontalBox } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+
+// Botão moderno customizado
+export component ModernButton inherits Rectangle {
+    in property <string> text: "";
+    in property <string> icon: "";
+    in property <bool> primary: true;
+    in property <bool> enabled: true;
+    callback clicked;
+    
+    height: 56px;
+    border-radius: 12px;
+    background: touch.pressed ? (primary ? #7c3aed : #dc2626) : 
+                touch.has-hover ? (primary ? Theme.primary-hover : #f87171) :
+                (primary ? Theme.primary : Theme.danger);
+    
+    opacity: enabled ? 1.0 : 0.5;
+    
+    touch := TouchArea {
+        enabled: root.enabled;
+        clicked => {
+            root.clicked();
+        }
+    }
+    
+    HorizontalLayout {
+        padding: 16px;
+        spacing: 8px;
+        alignment: center;
+        
+        if icon != "": Text {
+            text: icon;
+            font-size: 20px;
+            color: white;
+        }
+        
+        Text {
+            text: root.text;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            horizontal-alignment: center;
+        }
+    }
+}

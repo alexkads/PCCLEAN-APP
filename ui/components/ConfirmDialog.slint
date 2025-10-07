@@ -1,0 +1,97 @@
+import { HorizontalBox, VerticalBox } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { ModernButton } from "./ModernButton.slint";
+
+// Diálogo de confirmação
+export component ConfirmDialog inherits Rectangle {
+    in property <bool> show: false;
+    callback confirmed;
+    callback cancelled;
+    
+    visible: show;
+    
+    // Overlay escuro
+    background: rgba(0, 0, 0, 0.7);
+    
+    TouchArea {
+        clicked => {
+            cancelled();
+        }
+    }
+    
+    // Modal
+    Rectangle {
+        width: 480px;
+        height: 320px;
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        background: rgba(20, 20, 40, 0.98);
+        border-radius: 20px;
+        border-width: 1.5px;
+        border-color: Theme.primary;
+        drop-shadow-blur: 40px;
+        drop-shadow-color: rgba(139, 92, 246, 0.3);
+        
+        VerticalLayout {
+            padding: 32px;
+            spacing: 16px;
+            alignment: center;
+            
+            Text {
+                text: "⚠️";
+                font-size: 48px;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: "Confirm Cleanup";
+                font-size: 24px;
+                font-weight: 700;
+                color: Theme.text-primary;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: "Are you sure you want to delete the selected files?";
+                font-size: 14px;
+                color: Theme.text-secondary;
+                horizontal-alignment: center;
+                wrap: word-wrap;
+            }
+            
+            Text {
+                text: "This action cannot be undone";
+                font-size: 13px;
+                color: Theme.danger;
+                horizontal-alignment: center;
+            }
+            
+            Rectangle {
+                height: 24px;
+            }
+            
+            HorizontalLayout {
+                spacing: 12px;
+                alignment: center;
+                
+                ModernButton {
+                    text: "✓ Confirm";
+                    primary: false;
+                    width: 140px;
+                    clicked => {
+                        confirmed();
+                    }
+                }
+                
+                ModernButton {
+                    text: "✗ Cancel";
+                    primary: true;
+                    width: 140px;
+                    clicked => {
+                        cancelled();
+                    }
+                }
+            }
+        }
+    }
+}

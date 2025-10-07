@@ -1,0 +1,18 @@
+import { VerticalBox } from "std-widgets.slint";
+import { CategoryCard } from "./CategoryCard.slint";
+import { CategoryData } from "../types.slint";
+
+// Categories List Component
+export component CategoriesList inherits VerticalLayout {
+    in property <[CategoryData]> categories: [];
+    callback category-selection-changed(int, bool);
+    
+    spacing: 12px;
+    
+    for category[index] in categories: CategoryCard {
+        data: category;
+        selection-changed(checked) => {
+            category-selection-changed(index, checked);
+        }
+    }
+}

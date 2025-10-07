@@ -1,0 +1,16 @@
+import { Theme } from "../theme.slint";
+
+// Card com efeito glassmorphism
+export component GlassCard inherits Rectangle {
+    in property <string> title: "";
+    in property <bool> glow: false;
+    
+    background: rgba(20, 20, 40, 0.6);
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: glow ? Theme.primary : rgba(255, 255, 255, 0.05);
+    drop-shadow-blur: glow ? 20px : 0px;
+    drop-shadow-color: glow ? Theme.glow : transparent;
+    
+    @children
+}

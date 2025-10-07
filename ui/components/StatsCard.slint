@@ -1,0 +1,82 @@
+import { VerticalBox, Spinner } from "std-widgets.slint";
+import { Theme } from "../theme.slint";
+import { GlassCard } from "./GlassCard.slint";
+
+// Stats Card Component
+export component StatsCard inherits GlassCard {
+    in property <bool> has-results: false;
+    in property <bool> is-scanning: false;
+    in property <string> total-size-display: "0.00 GB";
+    in property <int> total-items: 0;
+    
+    height: 200px;
+    
+    VerticalLayout {
+        padding: 32px;
+        spacing: 12px;
+        alignment: center;
+        
+        if !has-results && !is-scanning: VerticalLayout {
+            spacing: 16px;
+            alignment: center;
+            
+            Text {
+                text: "👋";
+                font-size: 64px;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: "Welcome to PCCLEAN";
+                font-size: 24px;
+                font-weight: 600;
+                color: Theme.text-primary;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: "Click 'Start Scan' to analyze your system";
+                font-size: 14px;
+                color: Theme.text-secondary;
+                horizontal-alignment: center;
+            }
+        }
+        
+        if is-scanning: VerticalLayout {
+            spacing: 16px;
+            alignment: center;
+            
+            Spinner {
+                width: 48px;
+                height: 48px;
+            }
+            
+            Text {
+                text: "Scanning your system...";
+                font-size: 16px;
+                color: Theme.text-secondary;
+                horizontal-alignment: center;
+            }
+        }
+        
+        if has-results && !is-scanning: VerticalLayout {
+            spacing: 12px;
+            alignment: center;
+            
+            Text {
+                text: total-size-display;
+                font-size: 64px;
+                font-weight: 700;
+                color: Theme.primary;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: total-items + " files detected";
+                font-size: 14px;
+                color: Theme.text-secondary;
+                horizontal-alignment: center;
+            }
+        }
+    }
+}

@@ -1,0 +1,38 @@
+import { HorizontalBox } from "std-widgets.slint";
+import { ModernButton } from "./ModernButton.slint";
+
+// Action Buttons Component
+export component ActionButtons inherits HorizontalLayout {
+    in property <bool> is-scanning: false;
+    in property <bool> is-cleaning: false;
+    in property <bool> has-results: false;
+    in property <int> categories-count: 0;
+    
+    callback start-scan;
+    callback clean-clicked;
+    
+    spacing: 16px;
+    alignment: center;
+    
+    ModernButton {
+        text: is-scanning ? "Scanning..." : "🔍 Start Scan";
+        icon: "";
+        primary: true;
+        enabled: !is-scanning;
+        width: 200px;
+        clicked => {
+            start-scan();
+        }
+    }
+    
+    ModernButton {
+        text: "🗑️ Clean Selected";
+        icon: "";
+        primary: false;
+        enabled: has-results && !is-cleaning && categories-count > 0;
+        width: 200px;
+        clicked => {
+            clean-clicked();
+        }
+    }
+}
