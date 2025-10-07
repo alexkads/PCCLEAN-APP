@@ -69,6 +69,19 @@ Uma aplicação moderna de limpeza de disco construída com **Domain-Driven Desi
 
 ## 🚀 Quick Start
 
+### 📦 Instalação macOS (Recomendado)
+
+```bash
+# Criar instalador DMG
+cd macos-installer
+./build-installer.sh
+
+# Ou instalação rápida
+./install.sh
+```
+
+📖 **Guia completo:** [INSTALL_MACOS.md](INSTALL_MACOS.md)
+
 ### ⚡ Desenvolvimento (Rápido - Use Este!)
 ```bash
 cargo run              # Build rápido (~2s) + executa

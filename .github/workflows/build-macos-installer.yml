@@ -1,0 +1,90 @@
+name: Build macOS Installer
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-macos:
+    name: Build macOS DMG
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        profile: minimal
+        override: true
+        
+    - name: Cache Cargo
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        
+    - name: Build release binary
+      run: cargo build --release --verbose
+      
+    - name: Run tests
+      run: cargo test --release --verbose
+      
+    - name: Create installer
+      run: |
+        cd macos-installer
+        ./build-installer.sh
+        
+    - name: Get version
+      id: get_version
+      run: |
+        if [[ $GITHUB_REF == refs/tags/* ]]; then
+          VERSION=${GITHUB_REF#refs/tags/v}
+        else
+          VERSION=$(grep '^version' Cargo.toml | head -1 | cut -d'"' -f2)
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+        
+    - name: Upload DMG artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: PCClean-macOS-${{ steps.get_version.outputs.VERSION }}
+        path: macos-installer/build/PCClean-*.dmg
+        
+    - name: Upload to Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          macos-installer/build/PCClean-*.dmg
+          macos-installer/build/homebrew/pcclean.rb
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Calculate checksums
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        cd macos-installer/build
+        shasum -a 256 PCClean-*.dmg > checksums.txt
+        cat checksums.txt
+        
+    - name: Upload checksums
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: macos-installer/build/checksums.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
