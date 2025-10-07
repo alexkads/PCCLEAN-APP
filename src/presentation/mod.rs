@@ -1,4 +1,3 @@
-pub mod themes;
-pub mod app;
+mod slint_app;
 
-pub use app::PCCleanApp;
+pub use slint_app::run_app;

@@ -1,0 +1,539 @@
+import { Button, VerticalBox, HorizontalBox, ScrollView, CheckBox, Spinner } from "std-widgets.slint";
+
+// Estrutura para categoria
+export struct CategoryData {
+    name: string,
+    items-count: int,
+    total-size: string,
+    selected: bool,
+    icon: string,
+}
+
+// Cores do tema Cyberpunk
+export global Theme {
+    out property <color> background: #0a0a14;
+    out property <color> surface: #141428;
+    out property <color> surface-hover: #1a1a32;
+    out property <color> primary: #8b5cf6;
+    out property <color> primary-hover: #9d6cfa;
+    out property <color> secondary: #3b82f6;
+    out property <color> danger: #ef4444;
+    out property <color> success: #22c55e;
+    out property <color> warning: #f59e0b;
+    out property <color> text-primary: #f3f4f6;
+    out property <color> text-secondary: #9ca3af;
+    out property <color> text-muted: #6b7280;
+    out property <color> border: rgba(139, 92, 246, 0.2);
+    out property <color> glow: rgba(139, 92, 246, 0.4);
+}
+
+// Card com efeito glassmorphism
+component GlassCard inherits Rectangle {
+    in property <string> title: "";
+    in property <bool> glow: false;
+    
+    background: rgba(20, 20, 40, 0.6);
+    border-radius: 20px;
+    border-width: 1px;
+    border-color: glow ? Theme.primary : rgba(255, 255, 255, 0.05);
+    drop-shadow-blur: glow ? 20px : 0px;
+    drop-shadow-color: glow ? Theme.glow : transparent;
+    
+    @children
+}
+
+// Botão moderno customizado
+component ModernButton inherits Rectangle {
+    in property <string> text: "";
+    in property <string> icon: "";
+    in property <bool> primary: true;
+    in property <bool> enabled: true;
+    callback clicked;
+    
+    height: 56px;
+    border-radius: 12px;
+    background: touch.pressed ? (primary ? #7c3aed : #dc2626) : 
+                touch.has-hover ? (primary ? Theme.primary-hover : #f87171) :
+                (primary ? Theme.primary : Theme.danger);
+    
+    opacity: enabled ? 1.0 : 0.5;
+    
+    touch := TouchArea {
+        enabled: root.enabled;
+        clicked => {
+            root.clicked();
+        }
+    }
+    
+    HorizontalLayout {
+        padding: 16px;
+        spacing: 8px;
+        alignment: center;
+        
+        if icon != "": Text {
+            text: icon;
+            font-size: 20px;
+            color: white;
+        }
+        
+        Text {
+            text: root.text;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            horizontal-alignment: center;
+        }
+    }
+}
+
+// Card de categoria
+component CategoryCard inherits Rectangle {
+    in property <CategoryData> data;
+    in-out property <bool> selected: data.selected;
+    callback selection-changed(bool);
+    
+    height: 90px;
+    background: selected ? rgba(139, 92, 246, 0.15) : rgba(20, 20, 40, 0.6);
+    border-radius: 16px;
+    border-width: 1.5px;
+    border-color: selected ? Theme.primary : rgba(255, 255, 255, 0.05);
+    
+    // Hover effect
+    states [
+        hover when touch.has-hover: {
+            background: selected ? rgba(139, 92, 246, 0.2) : rgba(30, 30, 50, 0.8);
+        }
+    ]
+    
+    touch := TouchArea { }
+    
+    HorizontalLayout {
+        padding: 20px;
+        spacing: 16px;
+        alignment: center;
+        
+        CheckBox {
+            checked <=> selected;
+            toggled => {
+                selection-changed(self.checked);
+            }
+        }
+        
+        Text {
+            text: data.icon;
+            font-size: 28px;
+            width: 40px;
+        }
+        
+        VerticalLayout {
+            spacing: 4px;
+            alignment: start;
+            
+            Text {
+                text: data.name;
+                font-size: 16px;
+                font-weight: 600;
+                color: Theme.text-primary;
+            }
+            
+            Text {
+                text: data.items-count + " items • " + data.total-size;
+                font-size: 13px;
+                color: Theme.text-secondary;
+            }
+        }
+        
+        Rectangle {
+            width: 100%;
+        }
+        
+        // Size badge
+        Rectangle {
+            width: 90px;
+            height: 32px;
+            background: Theme.primary;
+            border-radius: 8px;
+            
+            Text {
+                text: data.total-size;
+                font-size: 14px;
+                font-weight: 600;
+                color: white;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
+
+// Status Bar
+component StatusBar inherits Rectangle {
+    in property <string> status: "READY";
+    in property <bool> is-busy: false;
+    in property <string> total-size: "0 GB";
+    in property <int> total-items: 0;
+    
+    height: 48px;
+    background: rgba(15, 15, 30, 0.95);
+    
+    HorizontalLayout {
+        padding-left: 20px;
+        padding-right: 20px;
+        spacing: 20px;
+        alignment: center;
+        
+        // Status indicator
+        HorizontalLayout {
+            spacing: 8px;
+            
+            Rectangle {
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background: is-busy ? Theme.warning : Theme.success;
+                
+                // Pulse animation when busy
+                animate background {
+                    duration: 1s;
+                    easing: ease-in-out;
+                    iteration-count: -1;
+                }
+            }
+            
+            Text {
+                text: status;
+                font-size: 12px;
+                color: Theme.text-secondary;
+            }
+        }
+        
+        Rectangle {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        if total-items > 0: Text {
+            text: "📦 " + total-size;
+            font-size: 12px;
+            color: Theme.primary;
+        }
+        
+        if total-items > 0: Rectangle {
+            width: 1px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        if total-items > 0: Text {
+            text: "📁 " + total-items + " items";
+            font-size: 12px;
+            color: Theme.secondary;
+        }
+        
+        Rectangle {
+            // Spacer
+            width: 100%;
+        }
+    }
+}
+
+// Diálogo de confirmação
+component ConfirmDialog inherits Rectangle {
+    in property <bool> show: false;
+    callback confirmed;
+    callback cancelled;
+    
+    visible: show;
+    
+    // Overlay escuro
+    background: rgba(0, 0, 0, 0.7);
+    
+    TouchArea {
+        clicked => {
+            cancelled();
+        }
+    }
+    
+    // Modal
+    Rectangle {
+        width: 480px;
+        height: 320px;
+        x: (parent.width - self.width) / 2;
+        y: (parent.height - self.height) / 2;
+        background: rgba(20, 20, 40, 0.98);
+        border-radius: 20px;
+        border-width: 1.5px;
+        border-color: Theme.primary;
+        drop-shadow-blur: 40px;
+        drop-shadow-color: rgba(139, 92, 246, 0.3);
+        
+        VerticalLayout {
+            padding: 32px;
+            spacing: 16px;
+            alignment: center;
+            
+            Text {
+                text: "⚠️";
+                font-size: 48px;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: "Confirm Cleanup";
+                font-size: 24px;
+                font-weight: 700;
+                color: Theme.text-primary;
+                horizontal-alignment: center;
+            }
+            
+            Text {
+                text: "Are you sure you want to delete the selected files?";
+                font-size: 14px;
+                color: Theme.text-secondary;
+                horizontal-alignment: center;
+                wrap: word-wrap;
+            }
+            
+            Text {
+                text: "This action cannot be undone";
+                font-size: 13px;
+                color: Theme.danger;
+                horizontal-alignment: center;
+            }
+            
+            Rectangle {
+                height: 24px;
+            }
+            
+            HorizontalLayout {
+                spacing: 12px;
+                alignment: center;
+                
+                ModernButton {
+                    text: "✓ Confirm";
+                    primary: false;
+                    width: 140px;
+                    clicked => {
+                        confirmed();
+                    }
+                }
+                
+                ModernButton {
+                    text: "✗ Cancel";
+                    primary: true;
+                    width: 140px;
+                    clicked => {
+                        cancelled();
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Main Window
+export component AppWindow inherits Window {
+    title: "PCCLEAN - Ultra Modern Disk Cleaner";
+    preferred-width: 1280px;
+    preferred-height: 900px;
+    min-width: 900px;
+    min-height: 650px;
+    background: Theme.background;
+    
+    // Properties
+    in-out property <bool> is-scanning: false;
+    in-out property <bool> is-cleaning: false;
+    in-out property <bool> has-results: false;
+    in-out property <string> total-size-display: "0.00 GB";
+    in-out property <int> total-items: 0;
+    in-out property <[CategoryData]> categories: [];
+    in-out property <bool> show-confirm-dialog: false;
+    
+    // Callbacks
+    callback start-scan;
+    callback start-clean;
+    callback category-selection-changed(int, bool);
+    callback confirm-clean;
+    callback cancel-clean;
+    
+    // Layout principal
+    VerticalLayout {
+        // Status bar no topo
+        StatusBar {
+            status: is-scanning ? "SCANNING" : is-cleaning ? "CLEANING" : "READY";
+            is-busy: is-scanning || is-cleaning;
+            total-size: total-size-display;
+            total-items: total-items;
+        }
+        
+        // Conteúdo principal
+        ScrollView {
+            VerticalLayout {
+                padding: 40px;
+                spacing: 24px;
+                
+                // Header
+                GlassCard {
+                    height: 180px;
+                    glow: true;
+                    
+                    VerticalLayout {
+                        padding: 40px;
+                        spacing: 8px;
+                        alignment: center;
+                        
+                        Text {
+                            text: "✨ PCCLEAN";
+                            font-size: 48px;
+                            font-weight: 900;
+                            color: Theme.primary;
+                            horizontal-alignment: center;
+                        }
+                        
+                        Text {
+                            text: "Ultra Modern Disk Cleaner";
+                            font-size: 16px;
+                            color: Theme.text-secondary;
+                            horizontal-alignment: center;
+                        }
+                        
+                        Text {
+                            text: "DDD Architecture • Clean Code • SOLID";
+                            font-size: 11px;
+                            color: Theme.text-muted;
+                            horizontal-alignment: center;
+                        }
+                    }
+                }
+                
+                // Stats Card
+                GlassCard {
+                    height: 200px;
+                    
+                    VerticalLayout {
+                        padding: 32px;
+                        spacing: 12px;
+                        alignment: center;
+                        
+                        if !has-results && !is-scanning: VerticalLayout {
+                            spacing: 16px;
+                            alignment: center;
+                            
+                            Text {
+                                text: "👋";
+                                font-size: 64px;
+                                horizontal-alignment: center;
+                            }
+                            
+                            Text {
+                                text: "Welcome to PCCLEAN";
+                                font-size: 24px;
+                                font-weight: 600;
+                                color: Theme.text-primary;
+                                horizontal-alignment: center;
+                            }
+                            
+                            Text {
+                                text: "Click 'Start Scan' to analyze your system";
+                                font-size: 14px;
+                                color: Theme.text-secondary;
+                                horizontal-alignment: center;
+                            }
+                        }
+                        
+                        if is-scanning: VerticalLayout {
+                            spacing: 16px;
+                            alignment: center;
+                            
+                            Spinner {
+                                width: 48px;
+                                height: 48px;
+                            }
+                            
+                            Text {
+                                text: "Scanning your system...";
+                                font-size: 16px;
+                                color: Theme.text-secondary;
+                                horizontal-alignment: center;
+                            }
+                        }
+                        
+                        if has-results && !is-scanning: VerticalLayout {
+                            spacing: 12px;
+                            alignment: center;
+                            
+                            Text {
+                                text: total-size-display;
+                                font-size: 64px;
+                                font-weight: 700;
+                                color: Theme.primary;
+                                horizontal-alignment: center;
+                            }
+                            
+                            Text {
+                                text: total-items + " files detected";
+                                font-size: 14px;
+                                color: Theme.text-secondary;
+                                horizontal-alignment: center;
+                            }
+                        }
+                    }
+                }
+                
+                // Action Buttons
+                HorizontalLayout {
+                    spacing: 16px;
+                    alignment: center;
+                    
+                    ModernButton {
+                        text: is-scanning ? "Scanning..." : "🔍 Start Scan";
+                        icon: "";
+                        primary: true;
+                        enabled: !is-scanning;
+                        width: 200px;
+                        clicked => {
+                            start-scan();
+                        }
+                    }
+                    
+                    ModernButton {
+                        text: "🗑️ Clean Selected";
+                        icon: "";
+                        primary: false;
+                        enabled: has-results && !is-cleaning && categories.length > 0;
+                        width: 200px;
+                        clicked => {
+                            show-confirm-dialog = true;
+                        }
+                    }
+                }
+                
+                // Categories List
+                if has-results && !is-scanning: VerticalLayout {
+                    spacing: 12px;
+                    
+                    for category[index] in categories: CategoryCard {
+                        data: category;
+                        selection-changed(checked) => {
+                            category-selection-changed(index, checked);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Confirm Dialog Overlay
+    ConfirmDialog {
+        show: show-confirm-dialog;
+        confirmed => {
+            show-confirm-dialog = false;
+            confirm-clean();
+        }
+        cancelled => {
+            show-confirm-dialog = false;
+            cancel-clean();
+        }
+    }
+}

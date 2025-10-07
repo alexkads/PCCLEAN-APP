@@ -4,14 +4,15 @@
 ![egui](https://img.shields.io/badge/egui-GUI-blue?style=for-the-badge)
 ![wgpu](https://img.shields.io/badge/wgpu-Graphics-purple?style=for-the-badge)
 
-Uma aplicação moderna de limpeza de disco com interface cyberpunk futurística desenvolvida em Rust usando egui + wgpu.
+Uma aplicação moderna de limpeza de disco com interface cyberpunk futurística desenvolvida em Rust usando **Slint** (framework UI nativo e performático).
 
 ## ✨ Características
 
-- 🎨 **Design Cyberpunk Futurístico** - Interface neon com animações suaves
-- ⚡ **Alto Desempenho** - Construído com Rust e aceleração por GPU
+- 🎨 **Design Cyberpunk Futurístico** - Interface neon com glassmorphism e animações
+- ⚡ **Alto Desempenho** - Construído com Rust e **Slint UI** (build 14x mais rápido que egui)
 - 🔍 **Varredura Inteligente** - Detecta múltiplos tipos de arquivos desnecessários
 - 🧹 **Limpeza Segura** - Confirmação antes de remover arquivos
+- 🏗️ **Arquitetura Limpa** - DDD + Clean Architecture + SOLID
 
 ## 🎯 Funcionalidades
 
@@ -198,10 +199,10 @@ test result: ok. 14 passed; 0 failed
 ## 📦 Dependências
 
 ```toml
-eframe = { version = "0.28", features = ["wgpu"] }
-egui = "0.28"
-walkdir = "2.5"
-anyhow = "1.0"
+slint = "1.8"              # Framework UI moderno e nativo
+tokio = "1.38"             # Runtime assíncrono
+walkdir = "2.5"            # Travessia de diretórios
+anyhow = "1.0"             # Error handling
 ```
 
 ## 🔧 Requisitos
