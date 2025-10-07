@@ -1,4 +1,4 @@
-import { CheckBox, HorizontalBox, VerticalBox } from "std-widgets.slint";
+import { CheckBox } from "std-widgets.slint";
 import { Theme } from "../theme.slint";
 import { CategoryData } from "../types.slint";
 
@@ -6,26 +6,47 @@ import { CategoryData } from "../types.slint";
 export component CategoryCard inherits Rectangle {
     in property <CategoryData> data;
     in-out property <bool> selected: data.selected;
+    
     callback selection-changed(bool);
     
-    height: 90px;
-    background: selected ? rgba(139, 92, 246, 0.15) : rgba(20, 20, 40, 0.6);
-    border-radius: 16px;
-    border-width: 1.5px;
-    border-color: selected ? Theme.primary : rgba(255, 255, 255, 0.05);
+    // Propriedades privadas para cores
+    private property <color> card-background: selected ? rgba(139, 92, 246, 0.15) : rgba(20, 20, 40, 0.6);
+    private property <color> card-border: selected ? Theme.primary : rgba(255, 255, 255, 0.05);
     
-    // Hover effect
+    height: 90px;
+    background: card-background;
+    border-radius: Theme.radius-large;
+    border-width: 1.5px;
+    border-color: card-border;
+    
+    // Acessibilidade
+    accessible-role: checkbox;
+    accessible-label: data.name + ", " + data.items-count + " items, " + data.total-size;
+    accessible-checked: selected;
+    
+    // Animações suaves
+    animate background, border-color {
+        duration: 250ms;
+        easing: ease-in-out;
+    }
+    
+    // Hover effect usando states
     states [
         hover when touch.has-hover: {
             background: selected ? rgba(139, 92, 246, 0.2) : rgba(30, 30, 50, 0.8);
         }
     ]
     
-    touch := TouchArea { }
+    touch := TouchArea {
+        clicked => {
+            selected = !selected;
+            selection-changed(selected);
+        }
+    }
     
     HorizontalLayout {
         padding: 20px;
-        spacing: 16px;
+        spacing: Theme.spacing-medium;
         alignment: center;
         
         CheckBox {
@@ -39,6 +60,7 @@ export component CategoryCard inherits Rectangle {
             text: data.icon;
             font-size: 28px;
             width: 40px;
+            vertical-alignment: center;
         }
         
         VerticalLayout {
@@ -50,17 +72,19 @@ export component CategoryCard inherits Rectangle {
                 font-size: 16px;
                 font-weight: 600;
                 color: Theme.text-primary;
+                vertical-alignment: center;
             }
             
             Text {
                 text: data.items-count + " items • " + data.total-size;
                 font-size: 13px;
                 color: Theme.text-secondary;
+                vertical-alignment: center;
             }
         }
         
         Rectangle {
-            width: 100%;
+            horizontal-stretch: 1;
         }
         
         // Size badge
@@ -68,7 +92,7 @@ export component CategoryCard inherits Rectangle {
             width: 90px;
             height: 32px;
             background: Theme.primary;
-            border-radius: 8px;
+            border-radius: Theme.radius-small;
             
             Text {
                 text: data.total-size;

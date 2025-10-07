@@ -1,17 +1,38 @@
 // Tema Cyberpunk Global
 export global Theme {
+    // Background colors
     out property <color> background: #0a0a14;
     out property <color> surface: #141428;
     out property <color> surface-hover: #1a1a32;
+    
+    // Brand colors
     out property <color> primary: #8b5cf6;
     out property <color> primary-hover: #9d6cfa;
     out property <color> secondary: #3b82f6;
+    
+    // State colors
     out property <color> danger: #ef4444;
     out property <color> success: #22c55e;
     out property <color> warning: #f59e0b;
+    
+    // Text colors
     out property <color> text-primary: #f3f4f6;
     out property <color> text-secondary: #9ca3af;
     out property <color> text-muted: #6b7280;
+    
+    // Effects
     out property <color> border: rgba(139, 92, 246, 0.2);
     out property <color> glow: rgba(139, 92, 246, 0.4);
+    
+    // Spacing (seguindo padrão do Slint)
+    out property <length> spacing-small: 8px;
+    out property <length> spacing-medium: 16px;
+    out property <length> spacing-large: 24px;
+    out property <length> spacing-xl: 32px;
+    
+    // Border radius
+    out property <length> radius-small: 8px;
+    out property <length> radius-medium: 12px;
+    out property <length> radius-large: 16px;
+    out property <length> radius-xl: 20px;
 }

@@ -1,46 +1,65 @@
-import { HorizontalBox } from "std-widgets.slint";
 import { Theme } from "../theme.slint";
 
 // Botão moderno customizado
 export component ModernButton inherits Rectangle {
-    in property <string> text: "";
+    in property <string> text <=> label.text;
     in property <string> icon: "";
     in property <bool> primary: true;
     in property <bool> enabled: true;
-    callback clicked;
+    
+    callback clicked <=> touch.clicked;
+    
+    // Propriedades privadas
+    private property <color> base-color: primary ? Theme.primary : Theme.danger;
+    private property <color> hover-color: primary ? Theme.primary-hover : #f87171;
+    private property <color> pressed-color: primary ? #7c3aed : #dc2626;
     
     height: 56px;
-    border-radius: 12px;
-    background: touch.pressed ? (primary ? #7c3aed : #dc2626) : 
-                touch.has-hover ? (primary ? Theme.primary-hover : #f87171) :
-                (primary ? Theme.primary : Theme.danger);
+    border-radius: Theme.radius-medium;
+    
+    // Definir background com base no estado
+    background: touch.pressed ? pressed-color : 
+                touch.has-hover ? hover-color : base-color;
     
     opacity: enabled ? 1.0 : 0.5;
     
+    // Acessibilidade
+    accessible-role: button;
+    accessible-label: text;
+    accessible-enabled: enabled;
+    
+    // Animações suaves
+    animate background {
+        duration: 200ms;
+        easing: ease-in-out;
+    }
+    
+    animate opacity {
+        duration: 150ms;
+    }
+    
     touch := TouchArea {
         enabled: root.enabled;
-        clicked => {
-            root.clicked();
-        }
     }
     
     HorizontalLayout {
-        padding: 16px;
-        spacing: 8px;
+        padding: Theme.spacing-medium;
+        spacing: Theme.spacing-small;
         alignment: center;
         
         if icon != "": Text {
             text: icon;
             font-size: 20px;
             color: white;
+            vertical-alignment: center;
         }
         
-        Text {
-            text: root.text;
+        label := Text {
             font-size: 16px;
             font-weight: 600;
             color: white;
             horizontal-alignment: center;
+            vertical-alignment: center;
         }
     }
 }

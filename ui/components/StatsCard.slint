@@ -1,4 +1,4 @@
-import { VerticalBox, Spinner } from "std-widgets.slint";
+import { Spinner } from "std-widgets.slint";
 import { Theme } from "../theme.slint";
 import { GlassCard } from "./GlassCard.slint";
 
@@ -11,13 +11,20 @@ export component StatsCard inherits GlassCard {
     
     height: 200px;
     
+    // Acessibilidade
+    accessible-role: text;
+    accessible-label: is-scanning ? "Scanning system" : 
+                     has-results ? "Found " + total-size-display + " in " + total-items + " files" :
+                     "Welcome to PCCLEAN";
+    
     VerticalLayout {
-        padding: 32px;
+        padding: Theme.spacing-xl;
         spacing: 12px;
         alignment: center;
         
+        // Estado inicial - Bem-vindo
         if !has-results && !is-scanning: VerticalLayout {
-            spacing: 16px;
+            spacing: Theme.spacing-medium;
             alignment: center;
             
             Text {
@@ -32,6 +39,7 @@ export component StatsCard inherits GlassCard {
                 font-weight: 600;
                 color: Theme.text-primary;
                 horizontal-alignment: center;
+                vertical-alignment: center;
             }
             
             Text {
@@ -39,11 +47,13 @@ export component StatsCard inherits GlassCard {
                 font-size: 14px;
                 color: Theme.text-secondary;
                 horizontal-alignment: center;
+                vertical-alignment: center;
             }
         }
         
+        // Estado de scanning
         if is-scanning: VerticalLayout {
-            spacing: 16px;
+            spacing: Theme.spacing-medium;
             alignment: center;
             
             Spinner {
@@ -56,26 +66,43 @@ export component StatsCard inherits GlassCard {
                 font-size: 16px;
                 color: Theme.text-secondary;
                 horizontal-alignment: center;
+                vertical-alignment: center;
             }
         }
         
+        // Estado com resultados
         if has-results && !is-scanning: VerticalLayout {
             spacing: 12px;
             alignment: center;
             
-            Text {
+            total-size-text := Text {
                 text: total-size-display;
                 font-size: 64px;
                 font-weight: 700;
                 color: Theme.primary;
                 horizontal-alignment: center;
+                vertical-alignment: center;
+                
+                // Animação ao aparecer
+                opacity: 0;
+                animate opacity {
+                    duration: 500ms;
+                    easing: ease-out;
+                }
             }
+            
+            states [
+                visible when has-results: {
+                    total-size-text.opacity: 1;
+                }
+            ]
             
             Text {
                 text: total-items + " files detected";
                 font-size: 14px;
                 color: Theme.text-secondary;
                 horizontal-alignment: center;
+                vertical-alignment: center;
             }
         }
     }

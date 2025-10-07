@@ -1,5 +1,5 @@
-import { HorizontalBox } from "std-widgets.slint";
 import { ModernButton } from "./ModernButton.slint";
+import { Theme } from "../theme.slint";
 
 // Action Buttons Component
 export component ActionButtons inherits HorizontalLayout {
@@ -8,31 +8,26 @@ export component ActionButtons inherits HorizontalLayout {
     in property <bool> has-results: false;
     in property <int> categories-count: 0;
     
-    callback start-scan;
-    callback clean-clicked;
+    callback start-scan <=> scan-button.clicked;
+    callback clean-clicked <=> clean-button.clicked;
     
-    spacing: 16px;
+    // Propriedades privadas
+    private property <bool> can-clean: has-results && !is-cleaning && categories-count > 0;
+    
+    spacing: Theme.spacing-medium;
     alignment: center;
     
-    ModernButton {
+    scan-button := ModernButton {
         text: is-scanning ? "Scanning..." : "🔍 Start Scan";
-        icon: "";
         primary: true;
         enabled: !is-scanning;
         width: 200px;
-        clicked => {
-            start-scan();
-        }
     }
     
-    ModernButton {
+    clean-button := ModernButton {
         text: "🗑️ Clean Selected";
-        icon: "";
         primary: false;
-        enabled: has-results && !is-cleaning && categories-count > 0;
+        enabled: can-clean;
         width: 200px;
-        clicked => {
-            clean-clicked();
-        }
     }
 }

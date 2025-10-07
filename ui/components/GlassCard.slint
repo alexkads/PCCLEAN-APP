@@ -6,11 +6,17 @@ export component GlassCard inherits Rectangle {
     in property <bool> glow: false;
     
     background: rgba(20, 20, 40, 0.6);
-    border-radius: 20px;
+    border-radius: Theme.radius-xl;
     border-width: 1px;
     border-color: glow ? Theme.primary : rgba(255, 255, 255, 0.05);
     drop-shadow-blur: glow ? 20px : 0px;
     drop-shadow-color: glow ? Theme.glow : transparent;
+    
+    // Animação suave para mudanças
+    animate border-color, drop-shadow-blur, drop-shadow-color {
+        duration: 300ms;
+        easing: ease-in-out;
+    }
     
     @children
 }

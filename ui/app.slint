@@ -1,4 +1,4 @@
-import { ScrollView, VerticalBox } from "std-widgets.slint";
+import { ScrollView } from "std-widgets.slint";
 
 // Imports de tipos e tema
 import { CategoryData } from "types.slint";
@@ -21,21 +21,26 @@ export component AppWindow inherits Window {
     min-height: 650px;
     background: Theme.background;
     
-    // Properties
+    // Properties públicas
     in-out property <bool> is-scanning: false;
     in-out property <bool> is-cleaning: false;
     in-out property <bool> has-results: false;
     in-out property <string> total-size-display: "0.00 GB";
     in-out property <int> total-items: 0;
     in-out property <[CategoryData]> categories: [];
-    in-out property <bool> show-confirm-dialog: false;
+    
+    // Propriedade privada
+    private property <bool> show-confirm-dialog: false;
     
     // Callbacks
-    callback start-scan;
-    callback start-clean;
-    callback category-selection-changed(int, bool);
+    callback start-scan <=> action-buttons.start-scan;
     callback confirm-clean;
     callback cancel-clean;
+    callback category-selection-changed(int, bool);
+    
+    // Acessibilidade
+    accessible-role: none;
+    accessible-label: "PCCLEAN Disk Cleaner Application";
     
     // Layout principal
     VerticalLayout {
@@ -47,11 +52,11 @@ export component AppWindow inherits Window {
             total-items: total-items;
         }
         
-        // Conteúdo principal
+        // Conteúdo principal com scroll
         ScrollView {
             VerticalLayout {
                 padding: 40px;
-                spacing: 24px;
+                spacing: Theme.spacing-large;
                 
                 // Header
                 Header { }
@@ -65,15 +70,11 @@ export component AppWindow inherits Window {
                 }
                 
                 // Action Buttons
-                ActionButtons {
+                action-buttons := ActionButtons {
                     is-scanning: is-scanning;
                     is-cleaning: is-cleaning;
                     has-results: has-results;
                     categories-count: categories.length;
-                    
-                    start-scan => {
-                        root.start-scan();
-                    }
                     
                     clean-clicked => {
                         show-confirm-dialog = true;
