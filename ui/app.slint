@@ -1,8 +1,7 @@
 import { ScrollView } from "std-widgets.slint";
 
-// Imports de tipos e tema
+// Imports de tipos
 import { CategoryData } from "types.slint";
-import { Theme } from "theme.slint";
 
 // Imports de componentes
 import { StatusBar } from "components/StatusBar.slint";
@@ -12,14 +11,13 @@ import { ActionButtons } from "components/ActionButtons.slint";
 import { CategoriesList } from "components/CategoriesList.slint";
 import { ConfirmDialog } from "components/ConfirmDialog.slint";
 
-// Main Window
+// Main Window com Material Design
 export component AppWindow inherits Window {
     title: "PCCLEAN - Ultra Modern Disk Cleaner";
     preferred-width: 1280px;
     preferred-height: 900px;
     min-width: 900px;
     min-height: 650px;
-    background: Theme.background;
     
     // Properties públicas
     in-out property <bool> is-scanning: false;
@@ -55,8 +53,8 @@ export component AppWindow inherits Window {
         // Conteúdo principal com scroll
         ScrollView {
             VerticalLayout {
-                padding: 40px;
-                spacing: Theme.spacing-large;
+                padding: 24px;
+                spacing: 24px;
                 
                 // Header
                 Header { }

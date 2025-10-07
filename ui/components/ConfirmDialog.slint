@@ -1,28 +1,16 @@
-import { Theme } from "../theme.slint";
-import { ModernButton } from "./ModernButton.slint";
+import { StandardButton, VerticalBox, HorizontalBox } from "std-widgets.slint";
 
-// Diálogo de confirmação
+// Diálogo de confirmação usando Material Design
 export component ConfirmDialog inherits Rectangle {
     in property <bool> show: false;
     
-    callback confirmed <=> confirm-button.clicked;
-    callback cancelled <=> cancel-button.clicked;
+    callback confirmed;
+    callback cancelled;
     
     visible: show;
     
-    // Overlay escuro
-    background: rgba(0, 0, 0, 0.7);
-    
-    // Acessibilidade
-    accessible-role: none;
-    accessible-label: "Confirm cleanup operation";
-    
-    // Animação de fade-in
-    opacity: show ? 1 : 0;
-    animate opacity {
-        duration: 200ms;
-        easing: ease-out;
-    }
+    // Overlay
+    background: rgba(0, 0, 0, 0.5);
     
     // Click fora do modal para cancelar
     TouchArea {
@@ -31,84 +19,70 @@ export component ConfirmDialog inherits Rectangle {
         }
     }
     
-    // Modal
-    modal := Rectangle {
+    // Modal usando Material Design
+    Rectangle {
         width: 480px;
-        height: 320px;
+        height: 280px;
         x: (parent.width - self.width) / 2;
         y: (parent.height - self.height) / 2;
-        background: rgba(20, 20, 40, 0.98);
-        border-radius: Theme.radius-xl;
-        border-width: 1.5px;
-        border-color: Theme.primary;
-        drop-shadow-blur: 40px;
-        drop-shadow-color: rgba(139, 92, 246, 0.3);
-        
-        // Animação suave ao aparecer
-        opacity: show ? 1 : 0;
-        animate opacity {
-            duration: 300ms;
-            easing: ease-out;
-        }
+        border-radius: 8px;
+        drop-shadow-blur: 24px;
+        drop-shadow-color: rgba(0, 0, 0, 0.3);
+        drop-shadow-offset-y: 8px;
         
         // Prevenir propagação do click
         TouchArea { }
         
-        VerticalLayout {
-            padding: Theme.spacing-xl;
-            spacing: Theme.spacing-medium;
-            alignment: center;
+        VerticalBox {
+            padding: 24px;
+            spacing: 20px;
             
-            Text {
-                text: "⚠️";
-                font-size: 48px;
-                horizontal-alignment: center;
+            // Título
+            HorizontalBox {
+                spacing: 12px;
+                
+                Text {
+                    text: "⚠️";
+                    font-size: 32px;
+                    vertical-alignment: center;
+                }
+                
+                Text {
+                    text: "Confirm Cleanup";
+                    font-size: 20px;
+                    font-weight: 600;
+                    vertical-alignment: center;
+                }
             }
             
+            // Conteúdo
             Text {
-                text: "Confirm Cleanup";
-                font-size: 24px;
-                font-weight: 700;
-                color: Theme.text-primary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
-            }
-            
-            Text {
-                text: "Are you sure you want to delete the selected files?";
-                font-size: 14px;
-                color: Theme.text-secondary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
+                text: "Are you sure you want to delete the selected files?\n\nThis action cannot be undone.";
                 wrap: word-wrap;
-            }
-            
-            Text {
-                text: "This action cannot be undone";
-                font-size: 13px;
-                color: Theme.danger;
-                horizontal-alignment: center;
-                vertical-alignment: center;
+                font-size: 14px;
             }
             
             Rectangle {
-                height: Theme.spacing-large;
+                height: 12px;
             }
             
-            HorizontalLayout {
+            // Botões
+            HorizontalBox {
                 spacing: 12px;
-                alignment: center;
+                alignment: end;
                 
-                confirm-button := ModernButton {
-                    text: "✓ Confirm";
-                    primary: false;
-                    width: 140px;
+                StandardButton {
+                    kind: cancel;
+                    clicked => {
+                        cancelled();
+                    }
                 }
                 
-                cancel-button := ModernButton {
-                    text: "✗ Cancel";
-                    primary: true;
-                    width: 140px;
+                StandardButton {
+                    kind: ok;
+                    clicked => {
+                        confirmed();
+                    }
                 }
             }
         }

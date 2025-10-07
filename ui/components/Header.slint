@@ -1,43 +1,35 @@
-import { Theme } from "../theme.slint";
-import { GlassCard } from "./GlassCard.slint";
+import { VerticalBox } from "std-widgets.slint";
 
-// Header Component
-export component Header inherits GlassCard {
-    height: 180px;
-    glow: true;
-    
+// Header Component usando Material Design
+export component Header inherits VerticalBox {
     // Acessibilidade
     accessible-role: text;
     accessible-label: "PCCLEAN - Ultra Modern Disk Cleaner";
     
-    VerticalLayout {
-        padding: 40px;
-        spacing: Theme.spacing-small;
-        alignment: center;
-        
-        Text {
-            text: "✨ PCCLEAN";
-            font-size: 48px;
-            font-weight: 900;
-            color: Theme.primary;
-            horizontal-alignment: center;
-            vertical-alignment: center;
-        }
-        
-        Text {
-            text: "Ultra Modern Disk Cleaner";
-            font-size: 16px;
-            color: Theme.text-secondary;
-            horizontal-alignment: center;
-            vertical-alignment: center;
-        }
-        
-        Text {
-            text: "DDD Architecture • Clean Code • SOLID";
-            font-size: 11px;
-            color: Theme.text-muted;
-            horizontal-alignment: center;
-            vertical-alignment: center;
-        }
+    padding: 24px;
+    spacing: 12px;
+    alignment: center;
+    
+    Text {
+        text: "✨ PCCLEAN";
+        font-size: 32px;
+        font-weight: 700;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    
+    Text {
+        text: "Ultra Modern Disk Cleaner";
+        font-size: 16px;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+    }
+    
+    Text {
+        text: "DDD Architecture • Clean Code • SOLID";
+        font-size: 11px;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        opacity: 0.7;
     }
 }

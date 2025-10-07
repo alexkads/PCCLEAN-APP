@@ -1,5 +1,4 @@
 import { ModernButton } from "./ModernButton.slint";
-import { Theme } from "../theme.slint";
 
 // Action Buttons Component
 export component ActionButtons inherits HorizontalLayout {
@@ -14,20 +13,18 @@ export component ActionButtons inherits HorizontalLayout {
     // Propriedades privadas
     private property <bool> can-clean: has-results && !is-cleaning && categories-count > 0;
     
-    spacing: Theme.spacing-medium;
+    spacing: 16px;
     alignment: center;
     
     scan-button := ModernButton {
         text: is-scanning ? "Scanning..." : "🔍 Start Scan";
         primary: true;
         enabled: !is-scanning;
-        width: 200px;
     }
     
     clean-button := ModernButton {
         text: "🗑️ Clean Selected";
         primary: false;
         enabled: can-clean;
-        width: 200px;
     }
 }

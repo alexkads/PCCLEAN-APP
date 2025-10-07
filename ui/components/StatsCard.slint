@@ -1,15 +1,11 @@
-import { Spinner } from "std-widgets.slint";
-import { Theme } from "../theme.slint";
-import { GlassCard } from "./GlassCard.slint";
+import { ProgressIndicator, VerticalBox } from "std-widgets.slint";
 
-// Stats Card Component
-export component StatsCard inherits GlassCard {
+// Stats Card Component usando Material Design
+export component StatsCard inherits VerticalBox {
     in property <bool> has-results: false;
     in property <bool> is-scanning: false;
     in property <string> total-size-display: "0.00 GB";
     in property <int> total-items: 0;
-    
-    height: 200px;
     
     // Acessibilidade
     accessible-role: text;
@@ -17,93 +13,76 @@ export component StatsCard inherits GlassCard {
                      has-results ? "Found " + total-size-display + " in " + total-items + " files" :
                      "Welcome to PCCLEAN";
     
-    VerticalLayout {
-        padding: Theme.spacing-xl;
+    padding: 32px;
+    spacing: 16px;
+    alignment: center;
+    min-height: 200px;
+    
+    // Estado inicial - Bem-vindo
+    if !has-results && !is-scanning: VerticalBox {
         spacing: 12px;
         alignment: center;
         
-        // Estado inicial - Bem-vindo
-        if !has-results && !is-scanning: VerticalLayout {
-            spacing: Theme.spacing-medium;
-            alignment: center;
-            
-            Text {
-                text: "👋";
-                font-size: 64px;
-                horizontal-alignment: center;
-            }
-            
-            Text {
-                text: "Welcome to PCCLEAN";
-                font-size: 24px;
-                font-weight: 600;
-                color: Theme.text-primary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
-            }
-            
-            Text {
-                text: "Click 'Start Scan' to analyze your system";
-                font-size: 14px;
-                color: Theme.text-secondary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
-            }
+        Text {
+            text: "👋";
+            font-size: 48px;
+            horizontal-alignment: center;
         }
         
-        // Estado de scanning
-        if is-scanning: VerticalLayout {
-            spacing: Theme.spacing-medium;
-            alignment: center;
-            
-            Spinner {
-                width: 48px;
-                height: 48px;
-            }
-            
-            Text {
-                text: "Scanning your system...";
-                font-size: 16px;
-                color: Theme.text-secondary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
-            }
+        Text {
+            text: "Welcome to PCCLEAN";
+            font-size: 24px;
+            font-weight: 600;
+            horizontal-alignment: center;
+            vertical-alignment: center;
         }
         
-        // Estado com resultados
-        if has-results && !is-scanning: VerticalLayout {
-            spacing: 12px;
-            alignment: center;
-            
-            total-size-text := Text {
-                text: total-size-display;
-                font-size: 64px;
-                font-weight: 700;
-                color: Theme.primary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
-                
-                // Animação ao aparecer
-                opacity: 0;
-                animate opacity {
-                    duration: 500ms;
-                    easing: ease-out;
-                }
-            }
-            
-            states [
-                visible when has-results: {
-                    total-size-text.opacity: 1;
-                }
-            ]
-            
-            Text {
-                text: total-items + " files detected";
-                font-size: 14px;
-                color: Theme.text-secondary;
-                horizontal-alignment: center;
-                vertical-alignment: center;
-            }
+        Text {
+            text: "Click 'Start Scan' to analyze your system";
+            font-size: 14px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            opacity: 0.8;
+        }
+    }
+    
+    // Estado de scanning
+    if is-scanning: VerticalBox {
+        spacing: 16px;
+        alignment: center;
+        
+        ProgressIndicator {
+            indeterminate: true;
+            width: 100px;
+        }
+        
+        Text {
+            text: "Scanning your system...";
+            font-size: 16px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+    }
+    
+    // Estado com resultados
+    if has-results && !is-scanning: VerticalBox {
+        spacing: 12px;
+        alignment: center;
+        
+        Text {
+            text: total-size-display;
+            font-size: 56px;
+            font-weight: 700;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+        
+        Text {
+            text: total-items + " files detected";
+            font-size: 14px;
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            opacity: 0.8;
         }
     }
 }
